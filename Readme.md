@@ -2,6 +2,11 @@
 
 A Chrome extension that exports Discord chat messages from channels to CSV files. Extract conversation history with timestamps, user information, message content, attachments, embeds, and reactions.
 
+<img width="394" alt="image" src="https://github.com/user-attachments/assets/b0fb1f55-7d28-4b98-bd39-c4695cd0b64b" />
+<img width="398" alt="image" src="https://github.com/user-attachments/assets/6fd33656-aecd-4af3-9a73-5be4a52e8bd8" />
+
+
+
 ## ✨ Features
 
 - **Easy Export**: Export any Discord channel messages to CSV format
@@ -157,25 +162,7 @@ This is an open source project! Feel free to:
 - Submit pull requests with improvements
 - Help improve documentation
 
-## 📄 Legal Notice
-
-This extension is provided "as-is" for educational and personal use. Using user tokens violates Discord's Terms of Service. The developers are not responsible for any account actions taken by Discord. Use at your own risk.
-
-## 🏷️ Version History
-
-### v5.0.0 (Current)
-- Complete code refactor and optimization
-- Enhanced UI with progress tracking
-- Added support for embeds and reactions
-- Improved error handling and rate limiting
-- Better CSV formatting with UTF-8 BOM
-
-### v2.0.0 (Previous)
-- Basic API-based export functionality
-- Simple date range selection
-- Core message export features
-
-## 📞 Support
+## Support
 
 If you encounter issues:
 1. Check the troubleshooting section above
@@ -183,5 +170,7 @@ If you encounter issues:
 3. Create an issue on GitHub with details about the problem
 
 ---
+
+This project is licensed under the MIT License.
 
 **Happy exporting! 🎉**
