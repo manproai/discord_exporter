@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Discord Chat Exporter</title>
+  <style>
+    * { box-sizing: border-box; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+      width: 400px;
+      min-height: 500px;
+      padding: 0;
+      margin: 0;
+      background: #f6f6f6;
+      color: #333;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #5865f2, #7289da);
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .header h2 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .header p {
+      margin: 5px 0 0 0;
+      font-size: 12px;
+      opacity: 0.9;
+    }
+
+    .content {
+      padding: 20px;
+    }
+
+    .section {
+      background: white;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .section-title {
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #2c2f33;
+      font-size: 14px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 500;
+      color: #555;
+      font-size: 13px;
+    }
+
+    input[type="text"], input[type="date"] {
+      width: 100%;
+      padding: 10px 12px;
+      border: 2px solid #e3e5e8;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: border-color 0.2s ease;
+    }
+
+    input[type="text"]:focus, input[type="date"]:focus {
+      outline: none;
+      border-color: #5865f2;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .btn-primary {
+      background: #5865f2;
+      color: white;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: #4752c4;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: #7289da;
+      color: white;
+      width: auto;
+      padding: 8px 16px;
+      font-size: 12px;
+      margin-top: 8px;
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      background: #677bc4;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    button.loading::after {
+      content: '';
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 12px;
+      height: 12px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top: 2px solid white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: translateY(-50%) rotate(0deg); }
+      100% { transform: translateY(-50%) rotate(360deg); }
+    }
+
+    .token-note {
+      font-size: 11px;
+      color: #666;
+      margin-top: 6px;
+      line-height: 1.4;
+    }
+
+    .token-warning {
+      font-size: 11px;
+      color: #ed4245;
+      margin-top: 4px;
+      padding: 6px 8px;
+      background: #fdf2f2;
+      border-radius: 4px;
+      border-left: 3px solid #ed4245;
+    }
+
+    .token-status {
+      font-size: 12px;
+      margin-top: 6px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    .token-status.valid {
+      color: #2d7d32;
+      background: #e8f5e8;
+    }
+
+    .token-status.invalid {
+      color: #d32f2f;
+      background: #fde8e8;
+    }
+
+    .date-inputs {
+      display: flex;
+      gap: 12px;
+    }
+
+    .date-inputs > div {
+      flex: 1;
+    }
+
+    .status {
+      padding: 10px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      margin-top: 12px;
+      font-weight: 500;
+    }
+
+    .status.success {
+      background: #e8f5e8;
+      color: #2d7d32;
+      border: 1px solid #c8e6c9;
+    }
+
+    .status.error {
+      background: #fde8e8;
+      color: #d32f2f;
+      border: 1px solid #f8bbd9;
+    }
+
+    .status.warning {
+      background: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffeaa7;
+    }
+
+    .status.info {
+      background: #e3f2fd;
+      color: #1565c0;
+      border: 1px solid #bbdefb;
+    }
+
+    .channel-info {
+      background: #f8f9fa;
+      padding: 10px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      border-left: 3px solid #5865f2;
+    }
+
+    .channel-name {
+      font-weight: 600;
+      color: #5865f2;
+    }
+
+    .channel-id {
+      color: #666;
+      font-family: monospace;
+      font-size: 11px;
+    }
+
+    .warning {
+      color: #856404;
+      font-size: 12px;
+      text-align: center;
+      padding: 8px;
+    }
+
+    .help-text {
+      font-size: 11px;
+      color: #666;
+      margin-top: 8px;
+      line-height: 1.3;
+    }
+
+    .divider {
+      height: 1px;
+      background: #e3e5e8;
+      margin: 16px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h2>Discord Chat Exporter</h2>
+    <p>Export channel messages to CSV</p>
+  </div>
+
+  <div class="content">
+    <!-- Channel Information -->
+    <div class="section">
+      <div class="section-title">📍 Current Location</div>
+      <div id="channelInfo">
+        <div class="warning">Loading channel information...</div>
+      </div>
+    </div>
+
+    <!-- Token Configuration -->
+    <div class="section">
+      <div class="section-title">🔑 Discord Token</div>
+      
+      <label for="discordToken">Your Discord Token:</label>
+      <input type="text" id="discordToken" placeholder="Paste your Discord token here">
+      
+      <div id="tokenStatus" class="token-status"></div>
+      
+      <button id="saveTokenButton" class="btn-secondary">Save Token</button>
+      
+      <div class="token-note">
+        Your token is stored locally and only used to fetch messages from Discord's API.
+      </div>
+      
+      <div class="token-warning">
+        ⚠️ <strong>Important:</strong> Using user tokens violates Discord's Terms of Service. Use at your own risk. Consider using a bot token instead for production use.
+      </div>
+    </div>
+
+    <!-- Date Range Selection -->
+    <div class="section">
+      <div class="section-title">📅 Date Range</div>
+      
+      <div class="date-inputs">
+        <div>
+          <label for="startDate">Start Date:</label>
+          <input type="date" id="startDate">
+        </div>
+        <div>
+          <label for="endDate">End Date:</label>
+          <input type="date" id="endDate">
+        </div>
+      </div>
+      
+      <div class="help-text">
+        Select the date range for messages you want to export. Large date ranges may take longer to process.
+      </div>
+    </div>
+
+    <!-- Export Action -->
+    <div class="section">
+      <button id="exportButton" class="btn-primary">
+        🚀 Start Export
+      </button>
+      
+      <div id="status" class="status" style="display: none;"></div>
+    </div>
+
+    <!-- Instructions -->
+    <div class="section">
+      <div class="section-title">💡 How to get your Discord Token</div>
+      <div class="help-text">
+        1. Open Discord in your browser<br>
+        2. Press F12 to open Developer Tools<br>
+        3. Go to Application/Storage → Local Storage → discord.com<br>
+        4. Find the "token" key and copy its value<br>
+        5. Paste it above and click "Save Token"
+      </div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
